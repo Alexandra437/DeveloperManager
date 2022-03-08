@@ -1,7 +1,9 @@
 package com.solution.developerManager.developer;
 
 import com.solution.developerManager.exception.DeveloperNotFoundException;
+import com.solution.developerManager.exception.NotUniqueDeveloperEmailException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -36,7 +38,11 @@ public class DeveloperService {
     }
 
     public DeveloperDto saveDeveloper(DeveloperDto developerDto) {
-        return developerMapper.toDeveloperDto(developerRepository.save(developerMapper.toDeveloper(developerDto)));
+        try {
+            return developerMapper.toDeveloperDto(developerRepository.save(developerMapper.toDeveloper(developerDto)));
+        } catch (DataIntegrityViolationException exception) {
+            throw new NotUniqueDeveloperEmailException("Developer with this email is already exist!!!");
+        }
     }
 
     @Transactional

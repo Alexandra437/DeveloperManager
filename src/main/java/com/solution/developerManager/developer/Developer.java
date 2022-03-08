@@ -29,5 +29,4 @@ public class Developer {
     @Column(name = "email", nullable = false, unique = true)
     @Email
     private String email;
-
 }
